@@ -17,3 +17,7 @@ hope it will be soon.
 Thanks to A.R, who was my partner to solve this challange,
 
 was an honor and really fun!
+
+
+- `Criminals.ipynb` is the main notebook
+- `sqli.py` was used to run queries quicker with threads 
