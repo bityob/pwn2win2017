@@ -192,3 +192,4 @@ for thread in threads:
 
 print('Found Text: ' + ''.join('{}'.format(val) for key, val in sorted(foundText.items()))
 )
+
